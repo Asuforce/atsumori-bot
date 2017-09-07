@@ -15,8 +15,8 @@ EM.run do
   ws.on :message do |event|
     data = JSON.parse(event.data)
 
-    send_apology(ws, data, data['channel']) if data['text'] == ':atsumori:'
-    send_apology(ws, data, data['item']['channel']) if data['reaction'] == 'atsumori'
+    send_apology(ws, data, data['channel']) if data['text'] =~ /^[:](atsumori)[:]/
+    send_apology(ws, data, data['item']['channel']) if data['reaction'] =~ /^(atsumori)/
   end
 
   ws.on :close do
@@ -24,13 +24,13 @@ EM.run do
     ws = nil
     EM.stop
   end
-end
 
-def send_apology(ws:, data:, channel:)
-  p [:message, data]
-  ws.send({
-    type: 'message',
-    text: "失礼しました。熱盛と出てしまいました。",
-    channel: channel
-    }.to_json)
+  def send_apology(ws, data, channel)
+    p [:message, data]
+    ws.send({
+      type: 'message',
+      text: "失礼しました。熱盛と出てしまいました。",
+      channel: channel
+      }.to_json)
+  end
 end
