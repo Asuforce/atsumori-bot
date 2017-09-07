@@ -10,7 +10,9 @@ url = rc['url']
 EM.run do
   ws = Faye::WebSocket::Client.new(url)
 
-  ws.on :open { p [:open] }
+  ws.on :open do
+    p [:open]
+  end
 
   ws.on :message do |event|
     data = JSON.parse(event.data)
